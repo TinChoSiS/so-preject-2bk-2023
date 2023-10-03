@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "Actualizar Venta"
+printTitle "Actualizar Venta"

@@ -1,21 +1,21 @@
 #!/bin/bash
 clear
 echo ""
-echo "Inicializando aplicación..."
+echo "${CYAN}Inicializando aplicación...${N}"
 
 if [ -f $PRODUCTOS ]; then
-    rm -f $PRODUCTOS $VENTAS
+    rm -f $PRODUCTOS $PEDIDOS
 fi
 
-# Incializamos el archivo de productos
-touch $PRODUCTOS $VENTAS
+# Inicializamos el archivo de productos
+touch $PRODUCTOS $PEDIDOS
 
 # Ingresamos los títulos de la tabla
 echo "ID:Nombre:Precio:Stock" >>$PRODUCTOS
 
 # Ingresamos los productos (Combos)
 for i in {1..10}; do
-    echo "$i:Combo $i:$((i * 1000)):$((i * 10))" >>$PRODUCTOS
+    echo "C$i:Combo $i:$((i * 1000)):$((i * 10))" >>$PRODUCTOS
 done
 
 pid=$! # Process Id of the previous running command
@@ -28,7 +28,7 @@ while [ $i -lt 20 ]; do
     sleep .1
 done
 
-echo -e "${GREEN}Todo OK${NC} \n"
+echo -e "${GREEN}Todo OK${N} \n"
 
 echo "Ejecute el programa nuevamente sin la opción --init / -i"
 

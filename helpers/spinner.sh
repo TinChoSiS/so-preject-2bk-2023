@@ -2,6 +2,12 @@
 
 # Ejecuta un spinner por X segundos pasados como argumentos.
 function spinner {
+
+    if [ -z "$1" ]; then
+        echo "Error: menuOption necesita un parámetro"
+        exit 1
+    fi
+
     delay=$(($1 * 10))
     spin='-\|/'
     i=1
