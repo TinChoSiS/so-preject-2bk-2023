@@ -6,6 +6,11 @@ REGISTROS=$WORKPATH/registros
 PRODUCTOS=$REGISTROS/productos
 VENTAS=$REGISTROS/ventas
 
+# Cargamos todos los helpers
+for file in $WORKPATH/helpers/*.sh; do
+    . $file
+done
+
 # configuramos unos colores para destacar los mensajes
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -17,10 +22,10 @@ IFS=$'\n'
 # Revisamos los argumentos que han entrado
 for arg in "$@"; do
     if [ "$arg" == "--help" ] || [ "$arg" == "-h" ]; then
-        . $WORKPATH/helpers/help.sh
+        . $WORKPATH/scripts/help.sh
     fi
     if [ "$arg" == "--init" ] || [ "$arg" == "-i" ]; then
-        . $WORKPATH/helpers/initialProducts.sh
+        . $WORKPATH/scripts/initialProducts.sh
     fi
 done
 
@@ -45,10 +50,10 @@ while true; do
     # Utilizamos un "clear" en cada opción para mostrar el resultado limpio.
     case $op in
     s | S) exit ;;
-    1) clear && bash bin/consulta.sh ;;
-    2) clear && bash bin/ingresar.sh ;;
-    3) clear && bash bin/actualizar.sh ;;
-    4) clear && bash bin/eliminar.sh ;;
+    1) clear && . bin/consulta.sh ;;
+    2) clear && . bin/ingresar.sh ;;
+    3) clear && . bin/actualizar.sh ;;
+    4) clear && . bin/eliminar.sh ;;
     *) clear && echo -e "Opción no válida. Intenta de nuevo\n" ;;
     esac
 

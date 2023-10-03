@@ -1,6 +1,4 @@
 #!/bin/bash
-source $(pwd)/helpers/pause.sh
-
 echo -e "Consultar Ventas \n"
 
 # asd=0
@@ -14,7 +12,7 @@ while IFS= read -r linea; do
     # combo=$(echo $linea | tr ":" "\t")
     column $combo -t -s ":"
 
-done <productos
+done <$PRODUCTOS
 
 pause "Presione una tecla para continuar..." true
 
