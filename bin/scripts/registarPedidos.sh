@@ -24,13 +24,7 @@ function registroPedido() {
 
     # Efecto de carga
     echo -e "\n${GREEN}--> Registrando pedido...${N}"
-    spin='-\|/'
-    i=1
-    while [ $i -lt 20 ]; do
-        i=$((i + 1))
-        printf "\r${spin:$i%4:1}"
-        sleep .1
-    done
+    spinner 20
 
     echo "$idPedido:$fecha:$telefonoCliente:$productoId:$cantidad:$total:$vendedor" >>$PEDIDOS
     return 0

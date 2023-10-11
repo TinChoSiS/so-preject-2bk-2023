@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ejecuta un spinner por X segundos pasados como argumentos.
+# Ejecuta un spinner por $1/10 segundos pasados como argumentos.
 function spinner {
 
     if [ -z "$1" ]; then
@@ -8,10 +8,9 @@ function spinner {
         exit 1
     fi
 
-    delay=$(($1 * 10))
     spin='-\|/'
     i=1
-    while [ $i -lt 20 ]; do
+    while [ $i -lt $1 ]; do
         i=$((i + 1))
         printf "\r${spin:$i%4:1}"
         sleep .1
