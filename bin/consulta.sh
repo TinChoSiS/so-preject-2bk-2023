@@ -1,23 +1,6 @@
 #!/bin/bash
 
 printTitle "Menú de Consultas"
-# asd=0
-# while [ $asd -lt 10 ]
-# do
-#     asd=$(($asd+1))
-#     echo $asd
-# done
-
-# IFS=":"
-# read -r -a array <<<$PRODUCTOS
-# while IFS= read -r linea; do
-#     # combo=$(echo $linea | tr ":" "\t")
-#     # echo -e $combo
-#     column $IFS -e -t -s ":"
-# done <$PRODUCTOS
-
-# Dividimos cada linea del archivo "productos" con el separador ":" y lo guardamos en un array
-# este array es tabulado con el comando column
 
 function mostrarProductos {
     printTitle "Consulta de Stock"

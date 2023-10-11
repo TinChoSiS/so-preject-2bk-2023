@@ -1,9 +1,17 @@
 #!/bin/bash
-
 # preparamos las variables de trabajo
+
+# Comentar para usar whoami o definido en el sistema
+USER="Roberto Carlos"
+# USER=$(whoami)
+
+# Directorios de trabajo
 WORKPATH=$1
+SCRIPTS=$WORKPATH/bin/scripts
+HELPERS=$WORKPATH/bin/helpers
 REGISTROS=$WORKPATH/registros
 PRODUCTOS=$REGISTROS/productos
+CLIENTES=$REGISTROS/clientes
 PEDIDOS=$REGISTROS/pedidos
 
 # configuramos unos estilos y colores para destacar los mensajes
@@ -20,7 +28,7 @@ B=$(tput bold) # Bold - negrita
 U=$(tput smul) # Underline - subrayado
 
 # Importamos las funciones necesarias
-for file in $WORKPATH/helpers/*.sh; do
+for file in $HELPERS/*.sh; do
     . $file
 done
 

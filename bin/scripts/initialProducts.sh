@@ -11,14 +11,12 @@ fi
 touch $PRODUCTOS $PEDIDOS
 
 # Ingresamos los títulos de la tabla
-echo "ID:Nombre:Precio:Stock" >>$PRODUCTOS
+echo "ID:Descripción:Precio:Stock" >>$PRODUCTOS
 
 # Ingresamos los productos (Combos)
 for i in {1..10}; do
     echo "C$i:Combo $i:$((i * 1000)):$((i * 10))" >>$PRODUCTOS
 done
-
-pid=$! # Process Id of the previous running command
 
 spin='-\|/'
 i=1
@@ -30,6 +28,6 @@ done
 
 echo -e "${GREEN}Todo OK${N} \n"
 
-echo "Ejecute el programa nuevamente sin la opción --init / -i"
+echo "Ejecute el programa nuevamente"
 
 exit 0

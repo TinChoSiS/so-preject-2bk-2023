@@ -5,14 +5,11 @@
 . $(pwd)/env/env.sh $(pwd)
 
 # Revisamos los argumentos que han entrado
-for arg in "$@"; do
-    if [ "$arg" == "--help" ] || [ "$arg" == "-h" ]; then
-        . $WORKPATH/scripts/help.sh
-    fi
-    if [ "$arg" == "--init" ] || [ "$arg" == "-i" ]; then
-        . $WORKPATH/scripts/initialProducts.sh
-    fi
-done
+case $1 in
+-h | --help) . $WORKPATH/bin/scripts/help.sh ;;
+-i | --init) . $WORKPATH/bin/scripts/initialProducts.sh ;;
+-c | --command) clear && . bin/withParam/case.sh -c $2 $3 $4 $5 ;;
+esac
 
 if [ ! -f $PRODUCTOS ]; then
     echo "${MAGENTA}ERROR: No se encontró el archivo de productos, es necesario inicializar el programa${N}"
@@ -22,13 +19,13 @@ fi
 
 # El bucle solo se detiene al usar la opción s|S
 while true; do
-    printTitle "Menú Principal (Ventas)"
+    printTitle "Menú Principal (Pedidos)"
 
     # Solicitamos la opción imprimiendo las mismas
     read -s -n 1 -p "Ingrese una opción:  
 |=====================|
-    $(menuOption 1 "Consultas")
-    $(menuOption 2 "Registrar")
+    $(menuOption 1 "Registrar")
+    $(menuOption 2 "Consultas")
     $(menuOption 3 "Actualizar")
     $(menuOption 4 "Eliminar")
 
@@ -40,8 +37,8 @@ while true; do
     # Utilizamos un "clear" en cada opción para mostrar el resultado limpio.
     case $op in
     s | S) exit 0 ;;
-    1) clear && . bin/consulta.sh ;;
-    2) clear && . bin/ingresar.sh ;;
+    1) clear && . bin/ingresar.sh ;;
+    2) clear && . bin/consulta.sh ;;
     3) clear && . bin/actualizar.sh ;;
     4) clear && . bin/eliminar.sh ;;
     *) clear && echo -e "${MAGENTA}Opción no válida. Intenta de nuevo${N}\n" ;;
