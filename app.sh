@@ -6,8 +6,8 @@
 
 # Revisamos los argumentos que han entrado
 case $1 in
--h | --help) . $WORKPATH/bin/scripts/help.sh ;;
--i | --init) . $WORKPATH/bin/scripts/initialProducts.sh ;;
+-h | --help) . $SCRIPTS/options/help.sh ;;
+-i | --init) . $SCRIPTS/options/initial.sh ;;
 -c | --command) clear && . bin/withParam/case.sh -c $2 $3 $4 $5 ;;
 esac
 

@@ -68,10 +68,10 @@ while true; do
                 break
             done
             # Obtenemos el ultimo ID del archivo de clientes y le sumamos 1
-            ultimoId=$(($(tail -n 1 $CLIENTES | cut -d: -f1) + 1))
+            ultimoId=$(($(tail -n 1 $CLIENTES | cut -d"|" -f1) + 1))
 
             # Almacenamos el nuevo cliente en la variable temporal
-            tempClienteExist="$ultimoId:$nombreCliente:$tempCliente"
+            tempClienteExist="$ultimoId|$nombreCliente|$tempCliente"
 
             # Guardamos el nuevo cliente en el archivo temporal
             echo $tempClienteExist >>$CLIENTES
@@ -81,7 +81,7 @@ while true; do
 
         # Acomodamos el Prompt para estilizar la pantalla
         retrocederPrompt 1
-        nombreCliente=$(echo $tempClienteExist | cut -d: -f2)
+        nombreCliente=$(echo $tempClienteExist | cut -d"|" -f2)
         echo -e "${GREEN}->${N} Telefono del Cliente: [$nombreCliente] $tempCliente"
 
         # Todo correcto, almacenamos el telefono del cliente para reutilizar.
@@ -106,7 +106,7 @@ while true; do
                 retrocederPrompt $(($(wc -l <$PRODUCTOS) + 3))
             fi
             echo -e "${YELLOW}--> ${U}Lista de productos:${N}"
-            column -t -o " | " -s ":" $PRODUCTOS
+            column -t -o " | " -s "|" $PRODUCTOS
             continue
         fi
 
@@ -120,7 +120,7 @@ while true; do
         fi
 
         # Almacenamos el stock del producto
-        stock=$(echo $tempProducto | cut -d: -f4)
+        stock=$(echo $tempProducto | cut -d"|" -f4)
 
         # Validamos que el producto tenga stock
         if [ $stock -eq 0 ]; then
@@ -136,9 +136,9 @@ while true; do
         fi
 
         # Solicitamos confirmación del producto, se lo contrario se vuelve a solicitar.
-        echo -e "${BLUE}--> Nombre:${YELLOW} ${B}$(echo $tempProducto | cut -d: -f2)${N}"
-        echo -e "${BLUE}--> Precio:${YELLOW} \$ ${B}$(echo $tempProducto | cut -d: -f3)${N}"
-        echo -e "${BLUE}--> Stock:${YELLOW}  ${B}$(echo $tempProducto | cut -d: -f4)${N}"
+        echo -e "${BLUE}--> Nombre:${YELLOW} ${B}$(echo $tempProducto | cut -d"|" -f2)${N}"
+        echo -e "${BLUE}--> Precio:${YELLOW} \$ ${B}$(echo $tempProducto | cut -d"|" -f3)${N}"
+        echo -e "${BLUE}--> Stock:${YELLOW}  ${B}$(echo $tempProducto | cut -d"|" -f4)${N}"
 
         tempConfirmFlag=true
         while $tempConfirmFlag; do
@@ -183,7 +183,7 @@ while true; do
         fi
 
         # Validamos que la cantidad no sea mayor al stock
-        if [ $tempCantidad -gt $(echo $productoLinea | cut -d: -f4) ]; then
+        if [ $tempCantidad -gt $(echo $productoLinea | cut -d'|' -f4) ]; then
             echo -e "${MAGENTA}ERROR: La cantidad debe ser menor o igual al stock${N}"
             continue
         fi
@@ -194,24 +194,28 @@ while true; do
     done
 
     # Confirmación del pedido
-    totalPedido=$(($(echo $productoLinea | cut -d: -f3) * $cantidad))
+    totalPedido=$(($(echo $productoLinea | cut -d'|' -f3) * $cantidad))
     echo -e "\n${GREEN}${U}Pedido:${N}"
     echo -e "${BLACK}Cliente:  ${CYAN}${B}$cliente [$nombreCliente]${N}"
-    echo -e "${BLACK}Producto: ${CYAN}${B}$(echo $productoLinea | cut -d: -f2)${N}"
+    echo -e "${BLACK}Producto: ${CYAN}${B}$(echo $productoLinea | cut -d'|' -f2)${N}"
     echo -e "${BLACK}Cantidad: ${CYAN}${B}$cantidad${N}"
-    echo -e "${BLACK}Total:   \$ ${CYAN}${B}$totalPedido${N} ${BLACK}(Unidad: \$$(echo $productoLinea | cut -d: -f3))${N}"
+    echo -e "${BLACK}Total:   \$ ${CYAN}${B}$totalPedido${N} ${BLACK}(Unidad: \$$(echo $productoLinea | cut -d"|" -f3))${N}"
     echo -e "${BLACK}Vendedor: ${CYAN}${B}$USER${N}"
     while true; do
         echo ""
         read -s -n 1 -p "${YELLOW}-> Revise el Pedido. ¿Es correcto? (s/n): ${N}" confirm
         if [ "$confirm" = "s" ]; then
             # Pedido confirmado, se resta la cantidad ingresada al stock del producto.
-            resto=$(($(echo $productoLinea | cut -d: -f4) - $cantidad))
+            resto=$(($(echo $productoLinea | cut -d "|" -f4) - $cantidad))
             # Obtenemos el número de línea del producto en el archivo de productos.
-            numLinea=$(grep -n -w ^$productoId $PRODUCTOS | cut -d: -f1)
+            numLinea=$(grep -n ^$productoId $PRODUCTOS | cut -d: -f1)
+
             # Reemplazamos el stock del producto en el archivo de productos.
-            sed -i ''$numLinea's/'$(echo $productoLinea | cut -d: -f4)'*$/'$resto'/' $PRODUCTOS
+            sed -i ''$numLinea's/'$(echo $productoLinea | cut -d "|" -f4)'*$/'$resto'/' $PRODUCTOS
+
+            # Registramos el pedido en el archivo de pedidos.
             registroPedido $cliente $productoId $cantidad $totalPedido
+
             # Limpiamos pantalla y salimos del script.
             clear
             break
