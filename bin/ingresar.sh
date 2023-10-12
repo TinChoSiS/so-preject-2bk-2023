@@ -111,7 +111,7 @@ while true; do
         fi
 
         # Buscamos el producto en el archivo de productos
-        tempProducto=$(grep -w ^$codigo $PRODUCTOS)
+        tempProducto=$(grep "^$codigo|" "$PRODUCTOS")
 
         # Validamos que el producto exista
         if [ ! "$tempProducto" ]; then
@@ -208,13 +208,18 @@ while true; do
             # Pedido confirmado, se resta la cantidad ingresada al stock del producto.
             resto=$(($(echo $productoLinea | cut -d "|" -f4) - $cantidad))
             # Obtenemos el número de línea del producto en el archivo de productos.
-            numLinea=$(grep -n ^$productoId $PRODUCTOS | cut -d: -f1)
+            numLinea=$(grep -n "^$productoId|" "$PRODUCTOS" | cut -d: -f1)
 
-            # Reemplazamos el stock del producto en el archivo de productos.
-            sed -i ''$numLinea's/'$(echo $productoLinea | cut -d "|" -f4)'*$/'$resto'/' $PRODUCTOS
+            # Efecto de carga
+            echo -e "\n${YELLOW}--> Registrando pedido...${N}"
+            spinner 20
 
             # Registramos el pedido en el archivo de pedidos.
             registroPedido $cliente $productoId $cantidad $totalPedido
+
+            # Pedido registrado
+            echo -e "${GREEN}--> Pedido registrado${N}"
+            sleep 2
 
             # Limpiamos pantalla y salimos del script.
             clear
@@ -224,6 +229,7 @@ while true; do
             # Pedido no confirmado.
             clear
             echo -e "${YELLOW}--> Pedido Cancelado${N}"
+            sleep 2
             break
         fi
         retrocederPrompt 1

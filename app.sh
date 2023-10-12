@@ -4,11 +4,13 @@
 # para evitar sobre carga de código
 . $(pwd)/env/env.sh $(pwd)
 
+accessLog $0 $1 $2 $3 $4 $5 $6 $7 $8 $9
+
 # Revisamos los argumentos que han entrado
 case $1 in
 -h | --help) . $SCRIPTS/options/help.sh ;;
 -i | --init) . $SCRIPTS/options/initial.sh ;;
--c | --command) clear && . bin/withParam/case.sh -c $2 $3 $4 $5 ;;
+-c | --command) clear && . $WORKPATH/bin/withParam/case.sh $2 $3 $4 $5 ;;
 esac
 
 if [ ! -f $PRODUCTOS ]; then

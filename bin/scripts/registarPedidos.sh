@@ -22,10 +22,16 @@ function registroPedido() {
         vendedor="$5"
     fi
 
-    # Efecto de carga
-    echo -e "\n${GREEN}--> Registrando pedido...${N}"
-    spinner 20
+    productoLinea=$(grep "^$productoId|" "$PRODUCTOS")
+    # Pedido confirmado, se resta la cantidad ingresada al stock del producto.
+    resto=$(($(echo $productoLinea | cut -d "|" -f4) - $cantidad))
+    # Obtenemos el número de línea del producto en el archivo de productos.
+    numLinea=$(grep -n "^$productoId|" $PRODUCTOS | cut -d: -f1)
 
+    # Reemplazamos el stock del producto en el archivo de productos.
+    sed -i ''$numLinea's/'$(echo $productoLinea | cut -d "|" -f4)'*$/'$resto'/' $PRODUCTOS
+
+    # Registramos el pedido en el archivo de pedidos.
     echo "$idPedido|$fecha|$telefonoCliente|$productoId|$cantidad|$total|$vendedor" >>$PEDIDOS
     return 0
 }

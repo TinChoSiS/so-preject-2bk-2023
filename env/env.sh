@@ -7,6 +7,7 @@ USER="Roberto Carlos"
 
 # Directorios de trabajo
 WORKPATH=$1
+LOGS=$WORKPATH/logs
 SCRIPTS=$WORKPATH/bin/scripts
 HELPERS=$WORKPATH/bin/helpers
 REGISTROS=$WORKPATH/registros
@@ -31,6 +32,9 @@ U=$(tput smul) # Underline - subrayado
 for file in $HELPERS/*.sh; do
     . $file
 done
+if [ -f $SCRIPTS/registroLogs.sh ]; then
+    . $SCRIPTS/registroLogs.sh
+fi
 
 # limpiamos pantalla
 tput setaf 0

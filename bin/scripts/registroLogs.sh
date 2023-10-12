@@ -4,6 +4,18 @@
 
 # fecha y hora:usuario:comando:argumentos
 
-string=$(date +"%d/%m/%Y %H:%M:%S"):$USER:$1:$2:$3:$4:$5:$6:$7:$8:$9
+function accessLog() {
+    string=$(date +"%d/%m/%Y %H:%M:%S"):$USER:$1:$2
+    if [ ! -f $LOGS/access.txt ]; then
+        echo "Fecha y Hora|Usuario|Comando|Argumentos" >>$LOGS/access.txt
+    fi
+    echo $string >>$LOGS/access.txt
+}
 
-echo $string >>$WORKPATH/registros/logs.txt
+function errorLog() {
+    string=$(date +"%d/%m/%Y %H:%M:%S"):$USER:$1:$2:$3:$4:$5
+    if [ ! -f $LOGS/error.txt ]; then
+        echo "Fecha y Hora|Usuario|Comando|Argumentos" >>$LOGS/error.txt
+    fi
+    echo $string >>$LOGS/error.txt
+}
