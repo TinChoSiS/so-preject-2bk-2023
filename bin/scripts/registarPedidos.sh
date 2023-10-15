@@ -10,8 +10,7 @@ function registroPedido() {
         echo -e "${YELLOW}Uso:${N} registroPedido <telefonoCliente> <idProducto> <cantidad> <total> [vendedor]"
         return 1
     fi
-    fecha=$(date +"%d/%m/%Y %H:%M:%S")
-    idPedido=$(grep -c ^ $PEDIDOS)
+    idPedido=$(($(tail -n 1 $PEDIDOS | cut -d "|" -f1) + 1))
     telefonoCliente="$1"
     productoId="$2"
     cantidad="$3"
@@ -20,6 +19,12 @@ function registroPedido() {
         vendedor=$USER
     else
         vendedor="$5"
+    fi
+    if [ ! "$6" ]; then
+        fecha=$(date +"%d/%m/%Y %H:%M:%S")
+    else
+        #quitar puntos y reemplazar por " " para evitar 2 parametros
+        fecha=$(echo "$6" | sed 's/\./ /g')
     fi
 
     productoLinea=$(grep "^$productoId|" "$PRODUCTOS")

@@ -2,7 +2,7 @@
 # preparamos las variables de trabajo
 
 # Comentar para usar whoami o definido en el sistema
-USER="Roberto Carlos"
+USER="Tincho"
 # USER=$(whoami)
 
 # Directorios de trabajo

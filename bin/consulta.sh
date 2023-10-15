@@ -1,24 +1,8 @@
 #!/bin/bash
 
+. $SCRIPTS/showFilter.sh
+
 printTitle "Menú de Consultas"
-
-function mostrarProductos {
-    printTitle "Consulta de Stock"
-    column -t -o " | " -s "|" $PRODUCTOS
-    pause "Presione cualquier tecla para continuar... " true
-}
-
-function mostrarClientes {
-    printTitle "Consulta de Clientes"
-    column -t -o " | " -s "|" $CLIENTES
-    pause "Presione cualquier tecla para continuar... " true
-}
-
-function mostrarPedidos {
-    printTitle "Consulta de Pedidos"
-    column -t -o " | " -s "|" $PEDIDOS
-    pause "Presione cualquier tecla para continuar... " true
-}
 
 while true; do
     # Menú de opciones

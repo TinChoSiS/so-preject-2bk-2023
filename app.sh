@@ -26,10 +26,10 @@ while true; do
     # Solicitamos la opción imprimiendo las mismas
     read -s -n 1 -p "Ingrese una opción:  
 |=====================|
-    $(menuOption 1 "Registrar")
-    $(menuOption 2 "Consultas")
-    $(menuOption 3 "Actualizar")
-    $(menuOption 4 "Eliminar")
+    $(menuOption 1 "Registrar Pedido")
+    $(menuOption 2 "Consultar Pedidos")
+    $(menuOption 3 "Actualizar Pedido")
+    $(menuOption 4 "Eliminar Pedido")
 
   $(menuOption s "Salir")
 |=====================|
