@@ -21,7 +21,7 @@ function registroPedido() {
         vendedor="$5"
     fi
     if [ ! "$6" ]; then
-        fecha=$(date +"%d/%m/%Y %H:%M:%S")
+        fecha=$(date +"%d-%m-%Y %H:%M:%S")
     else
         #quitar puntos y reemplazar por " " para evitar 2 parametros
         fecha=$(echo "$6" | sed 's/\./ /g')
