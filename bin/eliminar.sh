@@ -21,13 +21,12 @@ function eliminarPedido() {
                 moverPrompt 2
                 echo -e "${YELLOW}Últimos 10 pedidos:${N}"
                 echo -e "$(head -n 1 $PEDIDOS)" "\n""$(tail -n 10 $PEDIDOS)" | column -t -o " | " -s "|"
-                numRows=$(tail -n 10 $PEDIDOS | wc -l)
                 tempListOpened=true
             else
-                moverPrompt 2
+                clear
+                printTitle "Eliminar Pedido"
                 echo -e "${YELLOW}Lista completa de pedidos:${N}"
                 column -t -o " | " -s "|" $PEDIDOS
-                numRows=$(($(wc -l <$PEDIDOS) - 1))
             fi
             echo ""
             continue
@@ -37,6 +36,8 @@ function eliminarPedido() {
         fi
         lineaPedido=$(grep "^$numPedido|" $PEDIDOS)
         if [ $? -eq 0 ]; then
+            clear
+            printTitle "Eliminar Pedido"
             # confirmar eliminación
             echo -e "${YELLOW}Pedido encontrado:${N}"
             echo -e "${BLUE}Nro. Pedido:${YELLOW}${N} $(echo $lineaPedido | cut -d"|" -f1)${N}"

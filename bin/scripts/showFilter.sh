@@ -198,15 +198,11 @@ function filterProductos() {
     4) # Ventas x Vendedor x Mes
         printTitle "Ventas x Vendedor x Mes"
         while true; do
-            read -p "${YELLOW}Ingrese el Mes:${N}" mes
+            read -p "${YELLOW}Ingrese el Mes:${BLACK} ($(date "+%m"))${N} " mes
 
             if [ ! "$mes" ]; then
-                echo -e "${MAGENTA}ERROR: Debe ingresar un Mes${N}"
-                moverPrompt 2
-                continue
-            fi
-
-            if [ "$mes" -lt 1 ] || [ "$mes" -gt 12 ]; then
+                mes=$(date "+%m")
+            elif [ "$mes" -lt 1 ] || [ "$mes" -gt 12 ]; then
                 moverPrompt 2
                 echo -e "${MAGENTA}ERROR: El Mes debe ser un número entre 1 y 12${N}"
                 continue
@@ -229,8 +225,15 @@ function filterProductos() {
                 echo -e "${MAGENTA}ERROR: No se encontraron pedidos para el Mes y Año ingresados${N}"
                 continue
             fi
+
+            total=0
+            IFS=$'\n'
+            for linea in $pedidosLineas; do
+                totalLinea=$(echo $linea | cut -d"|" -f6)
+                total=$(($total + $totalLinea))
+            done
             moverPrompt 2
-            echo -e "${BLUE}Se realizaron los siguientes pedidos en el Mes ${YELLOW}$mes/$anio${BLUE}:${N}"
+            echo -e "${BLUE}Se realizaron los siguientes pedidos en el Mes ${YELLOW}$mes/$anio${BLUE} por un total de ${YELLOW}\$$total${BLUE}:${N}"
             echo ""
             echo -e "$(head -n 1 $PEDIDOS)" "\n""$pedidosLineas" | column -t -o " | " -s "|"
             echo ""

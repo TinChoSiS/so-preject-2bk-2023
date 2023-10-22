@@ -44,13 +44,15 @@ done
 
 # Ingresamos los clientes Random
 tempClientes=("Roberto" "Carlos" "Juan" "Pedro" "Maria" "Jose" "Luis" "Ana" "Marta" "Lucia" "Raul" "Jorge" "Ricardo" "Fernando" "Miguel" "Pablo" "Santiago" "Diego" "Daniel" "Manuel")
-for i in {1..20}; do
-    nombreCliente=${tempClientes[$(($RANDOM % 20))]}
-    echo "$i|$nombreCliente|123456$i" >>$CLIENTES
+for i in {0..19}; do
+    nombreCliente=${tempClientes[$i]}
+    echo "$(($i + 1))|$nombreCliente|11111$i" >>$CLIENTES
 done
 
 # Ingresamos los pedidos Random
 vendedor=("Fede" "Eze" "Pablo" "Nacho" "Gonza" "Tincho")
+
+# Ingresamos los pedidos Random con fecha en random en incremento
 
 for i in {1..50}; do
     idCliente=$(($RANDOM % 20 + 1))

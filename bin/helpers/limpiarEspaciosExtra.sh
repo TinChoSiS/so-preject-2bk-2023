@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Función para limpiar espacios extra en una cadena de texto
 function limpiarEspaciosExtra() {
     if [ ! "$1" ]; then
         return 1

@@ -110,6 +110,9 @@ while true; do
             continue
         fi
 
+        # lo modificamos a mayúsculas para descartar errores de usuario
+        codigo=$(echo $codigo | tr '[:lower:]' '[:upper:]')
+
         # Buscamos el producto en el archivo de productos
         tempProducto=$(grep "^$codigo|" "$PRODUCTOS")
 
