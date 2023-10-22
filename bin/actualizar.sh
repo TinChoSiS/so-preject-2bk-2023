@@ -64,6 +64,7 @@ function modificarPedido() {
                 echo -e "${YELLOW}Modificando pedido...${N}"
                 spinner 20
                 sed -i ''$numLinea's/'$(echo $pedido | cut -d "|" -f3)'/'$telefonoCliente'/' $PEDIDOS
+                clear
                 echo -e "${GREEN}Pedido modificado con éxito${N}"
                 break
             else
@@ -117,6 +118,7 @@ function modificarPedido() {
                 echo ""
                 echo -e "${YELLOW}Modificando pedido...${N}"
                 spinner 20
+
                 sed -i ''$numLinea's/'$(echo $pedido | cut -d "|" -f4)'/'$idProducto'/' $PEDIDOS
                 #modificamos el total del pedido con el nuevo producto
 
@@ -124,11 +126,14 @@ function modificarPedido() {
 
                 # también modificamos el stock en ambos productos (el anterior y el nuevo)
                 productoLinea=$(grep "^$(echo $pedido | cut -d "|" -f4)|" $PRODUCTOS)
+                numProductoLinea=$(grep -n "^$(echo $pedido | cut -d "|" -f4)|" $PRODUCTOS | cut -d: -f1)
                 productoLineaAfter=$(grep "^$idProducto|" $PRODUCTOS)
+                numProductoLineaAfter=$(grep -n "^$idProducto|" $PRODUCTOS | cut -d: -f1)
+
                 resto=$(($(echo $productoLinea | cut -d "|" -f4) + $(echo $pedido | cut -d "|" -f5)))
                 restoAfter=$(($(echo $productoLineaAfter | cut -d "|" -f4) - $(echo $pedido | cut -d "|" -f5)))
-                sed -i ''$numLinea's/'$(echo $productoLinea | cut -d "|" -f4)'/'$resto'/' $PRODUCTOS
-                sed -i ''$numLinea's/'$(echo $productoLineaAfter | cut -d "|" -f4)'/'$restoAfter'/' $PRODUCTOS
+                sed -i ''$numProductoLinea's/'$(echo $productoLinea | cut -d "|" -f4)'/'$resto'/' $PRODUCTOS
+                sed -i ''$numProductoLineaAfter's/'$(echo $productoLineaAfter | cut -d "|" -f4)'/'$restoAfter'/' $PRODUCTOS
 
                 echo -e "${GREEN}Pedido modificado con éxito${N}"
                 return 0
@@ -139,39 +144,78 @@ function modificarPedido() {
         done
         ;;
     3) # Cantidad
-        printTitle "Modificar Venta - Modificar Cantidad"
-        echo -e "${BLUE}Pedido seleccionado:${N}"
-        echo -e "$(head -n 1 $PEDIDOS)" "\n""${YELLOW}$pedido${N}" | column -t -o " | " -s "|"
-        echo ""
-        read -p "${YELLOW}Ingrese la cantidad:${N}" cantidad
-        if [ ! "$cantidad" ]; then
-            echo -e "${MAGENTA}ERROR: Debe ingresar una cantidad${N}"
-            moverPrompt 2
-            return 1
-        fi
+        while true; do
+            printTitle "Modificar Venta - Modificar Cantidad"
 
-        # Modificamos la cantidad del pedido
-        sed -i ''$numLinea's/'$(echo $pedido | cut -d "|" -f5)'/'$cantidad'/' $PEDIDOS
+            # Mostramos el pedido seleccionado
+            echo -e "${BLUE}Pedido seleccionado:${N}"
+            echo -e "$(head -n 1 $PEDIDOS)" "\n""${YELLOW}$pedido${N}" | column -t -o " | " -s "|"
 
-        # Modificamos el total del pedido
-        productoLinea=$(grep "^$(echo $pedido | cut -d "|" -f4)|" $PRODUCTOS)
-        total=$(($(echo $productoLinea | cut -d "|" -f3) * $cantidad))
-        sed -i ''$numLinea's/'$(echo $pedido | cut -d "|" -f6)'/'$total'/' $PEDIDOS
+            # Pedimos la nueva cantidad
+            echo ""
+            read -p "${YELLOW}Ingrese la cantidad: ${BLACK}S|s para cancelar${N} " newCantidad
 
-        # Modificamos el stock del producto
-        resto=$(($(echo $productoLinea | cut -d "|" -f4) - $cantidad))
-        numLinea=$(grep -n "^$(echo $pedido | cut -d "|" -f4)|" $PRODUCTOS | cut -d: -f1)
+            # Si el usuario ingresa "s" o "S" cancelamos la operación, sino validamos el ID
+            if [ "$newCantidad" = "s" ] || [ "$newCantidad" = "S" ]; then
+                moverPrompt 2
+                break
+            fi
+            if [ ! "$newCantidad" ]; then
+                clear
+                echo -e "${MAGENTA}ERROR: Debe ingresar una cantidad${N}"
+                continue
+            fi
+
+            # Todo correcto, continuamos con la confirmación, limpiamos y volvemos a mostrar el título
+            clear
+            printTitle "Modificar Venta - Modificar Cantidad"
+
+            # mostrar pedido antes y después de modificar y solicitamos confirmación
+            idProducto=$(echo $pedido | cut -d "|" -f4)
+            nuevoTotal=$(($(echo $(grep "^$idProducto|" $PRODUCTOS) | cut -d "|" -f3) * $newCantidad))
+
+            pedidoAfter=$(echo $pedido | sed 's/|'$(echo $pedido | cut -d "|" -f5)'|/|'$newCantidad'|/')
+            pedidoAfter=$(echo $pedidoAfter | sed 's/|'$(echo $pedido | cut -d "|" -f6)'|/|'$nuevoTotal'|/')
+            if confirmCambio "$pedido" "$pedidoAfter"; then
+                # Modificamos el pedido con efecto de retardo
+                moverPrompt 2
+                echo ""
+                echo -e "${YELLOW}Modificando pedido...${N}"
+                spinner 20
+
+                # modificamos la cantidad del producto
+                sed -i ''$numLinea's/|'$(echo $pedido | cut -d "|" -f5)'|/|'$newCantidad'|/' $PEDIDOS
+
+                #modificamos el total del pedido con el nuevo producto
+                sed -i ''$numLinea's/|'$(echo $pedido | cut -d "|" -f6)'|/|'$nuevoTotal'|/' $PEDIDOS
+
+                # también modificamos el stock en ambos productos (el anterior y el nuevo)
+                productoLinea=$(grep "^$(echo $pedido | cut -d "|" -f4)|" $PRODUCTOS)
+                numProductoLinea=$(grep -n "^$(echo $pedido | cut -d "|" -f4)|" $PRODUCTOS | cut -d: -f1)
+                cantidadBefore=$(echo $pedido | cut -d "|" -f5)
+
+                if [ $newCantidad -gt $cantidadBefore ]; then
+                    # si la nueva cantidad es mayor a la anterior, restamos la diferencia al stock
+                    resto=$(($(echo $productoLinea | cut -d "|" -f4) - $(($newCantidad - $cantidadBefore))))
+                else
+                    # si la nueva cantidad es menor a la anterior, sumamos la diferencia al stock
+                    resto=$(($(echo $productoLinea | cut -d "|" -f4) + $(($cantidadBefore - $newCantidad))))
+                fi
+
+                #modificamos el stock del producto
+                sed -i ''$numProductoLinea's/'$(echo $productoLinea | cut -d "|" -f4)'/'$resto'/' $PRODUCTOS
+
+                echo -e "${GREEN}Pedido modificado con éxito${N}"
+                return 0
+            else
+                clear
+                continue
+            fi
+        done
         ;;
 
     esac
 
-    # IFS=$'\n'
-    # pedido=$(grep "^$pedido|" $PEDIDOS)
-    # if [ ! "$pedido" ]; then
-    #     echo "No se ha encontrado el pedido"
-    #     return 1
-    # fi
-    # echo $pedido
 }
 while true; do
     # Mostramos los pedidos del día
@@ -180,18 +224,19 @@ while true; do
 
     # Pedimos el ID del pedido a modificar
     echo ""
-    read -p "${YELLOW}Ingrese el ID del pedido a modificar: ${BLACK}S|s para cancelar${N} " tempPedido
-    if [ "$tempPedido" = "s" ] || [ "$tempPedido" = "S" ]; then
+    read -p "${YELLOW}Ingrese el ID del pedido a modificar: ${BLACK}S|s para cancelar${N} " codePedido
+    if [ "$codePedido" = "s" ] || [ "$codePedido" = "S" ]; then
         clear
         break
     fi
-    if [ ! "$tempPedido" ]; then
+    if [ ! "$codePedido" ]; then
         moverPrompt 2
         echo -e "${MAGENTA}ERROR: Debe ingresar un ID${N}"
         echo ""
         continue
     fi
-    pedido=$(grep "^$tempPedido|" $PEDIDOS)
+    numLinea=$(grep -n "^$codePedido|" $PEDIDOS | cut -d: -f1)
+    pedido=$(grep "^$codePedido|" $PEDIDOS)
     if [ ! "$pedido" ]; then
         moverPrompt 2
         echo -e "${MAGENTA}ERROR: No se encontró ningún pedido${N}"
