@@ -49,20 +49,33 @@ function eliminarPedido() {
             echo -e "${BLUE}Total:${YELLOW}${N}       \$$(echo $lineaPedido | cut -d"|" -f6)${N}"
             echo -e "${BLUE}Vendedor:${YELLOW}${N}    $(echo $lineaPedido | cut -d"|" -f7)${N}"
             echo ""
-            read -n 1 -s -p "${YELLOW}-> Confirmar eliminación ${BLACK}(s/n): ${N}" confirm
-            echo -e "\n"
-            if [ "$confirm" = "n" ]; then
-                moverPrompt 2
+            while true; do
+
+                read -n 1 -s -p "${YELLOW}-> Confirmar eliminación ${BLACK}(s/n): ${N}" confirm
+                echo -e "\n"
+
+                if [ "$confirm" = "n" ]; then
+                    clear
+                    break
+                elif [ "$confirm" = "s" ]; then
+                    echo -e "${YELLOW}Eliminando pedido...${N}"
+                    spinner 20
+                    echo -e "${GREEN}Pedido eliminado${N}"
+                    # Restaurar el stock del producto
+                    idProducto=$(echo $lineaPedido | cut -d"|" -f4)
+                    cantidadPedido=$(echo $lineaPedido | cut -d"|" -f5)
+                    numLineaProducto=$(grep -n "^$idProducto|" $PRODUCTOS | cut -d":" -f1)
+                    sed -i ''$numLineaProducto's/'\|$(grep "^$idProducto|" $PRODUCTOS | cut -d"|" -f4)$'/'\|$(($(grep "^$idProducto|" $PRODUCTOS | cut -d"|" -f4) + $cantidadPedido))'/' $PRODUCTOS
+                    sed -i "/^$numPedido|/d" $PEDIDOS
+
+                    sleep 2
+                    clear
+                    break
+                fi
+                retrocederPrompt 2
                 continue
-            elif [ "$confirm" = "s" ]; then
-                sed -i "/^$numPedido|/d" $PEDIDOS
-                echo -e "${YELLOW}Eliminando pedido...${N}"
-                spinner 20
-                echo -e "${GREEN}Pedido eliminado${N}"
-                sleep 2
-                clear
-                break
-            fi
+            done
+            break
         else
             echo -e "${MAGENTA}ERROR: El pedido no existe${N}"
         fi
