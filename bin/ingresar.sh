@@ -2,7 +2,7 @@
 
 . $SCRIPTS/registarPedidos.sh
 
-telefono_validos_regex="^[0-9]+$"
+telefono_validos_regex="^09[0-9]{7}$"
 nombres_validos_regex="^[A-Za-záéíóúÁÉÍÓÚüÜñÑ]+$"
 
 while true; do
@@ -28,7 +28,7 @@ while true; do
         # limpiarEspaciosExtra es una función definida en helpers/limpiarEspaciosExtra.sh
         tempCliente=$(limpiarEspaciosExtra "$tempCliente")
         if [[ ! $tempCliente =~ $telefono_validos_regex ]]; then
-            echo -e "${MAGENTA}ERROR: El telefono del cliente es inválido${N}. Ej: 123456789"
+            echo -e "${MAGENTA}ERROR: El telefono del cliente es inválido${N}. Ej: 099123456"
             continue
         fi
 

@@ -46,7 +46,12 @@ done
 tempClientes=("Roberto" "Carlos" "Juan" "Pedro" "Maria" "Jose" "Luis" "Ana" "Marta" "Lucia" "Raul" "Jorge" "Ricardo" "Fernando" "Miguel" "Pablo" "Santiago" "Diego" "Daniel" "Manuel")
 for i in {0..19}; do
     nombreCliente=${tempClientes[$i]}
-    echo "$(($i + 1))|$nombreCliente|11111$i" >>$CLIENTES
+    if [ $i -lt 10 ]; then
+        telefono="09988770$i"
+    else
+        telefono="0998877$i"
+    fi
+    echo "$(($i + 1))|$nombreCliente|$telefono" >>$CLIENTES
 done
 
 # Ingresamos los pedidos Random

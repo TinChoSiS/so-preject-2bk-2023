@@ -28,12 +28,14 @@ N=$(tput sgr0) # Normal - restablece todos los estilos
 B=$(tput bold) # Bold - negrita
 U=$(tput smul) # Underline - subrayado
 
+
+export BLACK RED GREEN YELLOW BLUE MAGENTA CYAN N B U LOGS SCRIPTS HELPERS REGISTROS PRODUCTOS CLIENTES PEDIDOS USER
 # Importamos las funciones necesarias
-for file in $HELPERS/*.sh; do
-    . $file
+for file in "${HELPERS}"/*.sh; do
+    . "${file}"
 done
-if [ -f $SCRIPTS/registroLogs.sh ]; then
-    . $SCRIPTS/registroLogs.sh
+if [ -f "${SCRIPTS}/registroLogs.sh" ]; then
+    . "${SCRIPTS}/registroLogs.sh"
 fi
 
 # limpiamos pantalla
