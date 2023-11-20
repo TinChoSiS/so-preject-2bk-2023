@@ -1,3 +1,4 @@
+# spinner.sh
 #!/bin/bash
 
 # Ejecuta un spinner por $1/10 segundos pasados como argumentos.

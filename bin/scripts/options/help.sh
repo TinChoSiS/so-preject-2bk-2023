@@ -1,9 +1,9 @@
+# help.sh
 #!/bin/bash
+# Path: bin/scripts/options/help.sh
 
 printTitle "Registros de Pedidos"
-
 # Función para mostrar la ayuda de la aplicación
-
 echo -e "Bienvendido/aZ a la ayuda de la aplicación de pedidos."
 echo -e "Esta aplicación permite registrar pedidos de combos de comida."
 echo -e "Se puede realizar mediante la ejecución de la aplicación en modo interactivo o mediante la ejecución de comandos."
@@ -23,5 +23,4 @@ echo -e "
     Comandos:
         add <telefono> <codigo_producto> <cantidad> # Agrega un nuevo pedido
 "
-
 exit 0

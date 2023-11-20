@@ -1,3 +1,4 @@
+# registarPedidos.sh
 #!/bin/bash
 
 # Registramos las ventas en un archivo persistente

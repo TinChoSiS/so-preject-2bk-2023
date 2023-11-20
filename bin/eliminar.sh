@@ -1,3 +1,4 @@
+# eliminar.sh
 #!/bin/bash
 
 function eliminarPedido() {

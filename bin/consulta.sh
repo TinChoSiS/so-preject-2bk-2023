@@ -1,3 +1,4 @@
+# consulta.sh
 #!/bin/bash
 
 . $SCRIPTS/showFilter.sh

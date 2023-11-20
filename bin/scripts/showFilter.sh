@@ -1,3 +1,4 @@
+# showFilter.sh
 #!/bin/bash
 
 # Función para mostrar la lista de Combos con su precio y stock

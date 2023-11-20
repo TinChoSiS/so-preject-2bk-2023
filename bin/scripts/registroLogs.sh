@@ -1,3 +1,4 @@
+# registroLogs.sh
 #!/bin/bash
 
 # Script para registrar los logs de la aplicación en un archivo

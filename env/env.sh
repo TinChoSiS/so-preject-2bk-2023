@@ -1,9 +1,11 @@
+# env.sh
 #!/bin/bash
+
 # preparamos las variables de trabajo
 
 # Comentar para usar whoami o definido en el sistema
-USER="Tincho"
-# USER=$(whoami)
+# USER="Tincho"
+USER=$(whoami)
 
 # Directorios de trabajo
 WORKPATH=$1
@@ -27,7 +29,6 @@ CYAN=$(tput setaf 6)
 N=$(tput sgr0) # Normal - restablece todos los estilos
 B=$(tput bold) # Bold - negrita
 U=$(tput smul) # Underline - subrayado
-
 
 export BLACK RED GREEN YELLOW BLUE MAGENTA CYAN N B U LOGS SCRIPTS HELPERS REGISTROS PRODUCTOS CLIENTES PEDIDOS USER
 # Importamos las funciones necesarias

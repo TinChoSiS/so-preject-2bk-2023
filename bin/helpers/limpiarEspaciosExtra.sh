@@ -1,3 +1,4 @@
+# limpiarEspaciosExtra.sh
 #!/bin/bash
 
 # Función para limpiar espacios extra en una cadena de texto

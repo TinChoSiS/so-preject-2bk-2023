@@ -1,3 +1,4 @@
+# app.sh
 #!/bin/bash
 
 # Importamos los archivos necesarios descentralizados
@@ -47,7 +48,6 @@ while true; do
     4) clear && . bin/eliminar.sh ;;
     *) clear && echo -e "${MAGENTA}Opción no válida. Intenta de nuevo${N}\n" ;;
     esac
-
 done
 
 # wc
